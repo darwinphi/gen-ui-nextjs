@@ -1,0 +1,14 @@
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+!.env.example
+
+.next
+node_modules
+
+coverage
+*.log
+*.tsbuildinfo
+.DS_Store
