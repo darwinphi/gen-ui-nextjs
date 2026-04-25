@@ -6,6 +6,11 @@ import { SchemaPanel } from "./SchemaPanel";
 import { formSchema, type FormSchema } from "../lib/formSchema";
 
 const DEFAULT_PROMPT = "Create a form with only name and email.";
+const QUICK_PROMPTS = [
+  "Create a form with only name and email.",
+  "Create a feedback form with email, topic, and message.",
+  "Create a form with full name, email, and a checkbox for newsletter consent.",
+];
 
 type GenerateFormResponse = {
   schema?: unknown;
@@ -59,79 +64,111 @@ export function FormBuilderWorkbench({
   }
 
   return (
-    <main className="page-shell">
-      <section className="hero">
-        <div className="hero__eyebrow">LLM-Backed Generative UI</div>
-        <h1>Next.js form generation with a server-side model</h1>
-        <p>
-          The prompt is sent to a Next.js route handler, the model returns a
-          strict schema, and React renders only the allowed field components.
-        </p>
-      </section>
+    <>
+      <header className="masthead">
+        <div className="masthead__brand">
+          <span className="masthead__title">gen-ui-nextjs</span>
+        </div>
+        <div className="masthead__utility">
+          <span
+            className={`status-chip ${
+              apiConfigured ? "status-chip--success" : "status-chip--warning"
+            }`}
+          >
+            {apiConfigured ? "API connected" : "API key missing"}
+          </span>
+        </div>
+      </header>
 
-      <section className="workspace">
-        <div className="composer-card">
-          <div className="composer-card__header">
-            <h2>Prompt</h2>
-            <p>
-              Try prompts like “only name and email”, “feedback form with topic
-              and message”, or “job application with cover letter”.
-            </p>
-          </div>
-
-          <label className="prompt-field" htmlFor="prompt">
-            <span className="field__label">Describe the form you want to generate</span>
-            <textarea
-              id="prompt"
-              name="prompt"
-              rows={5}
-              value={prompt}
-              onChange={(event) => setPrompt(event.target.value)}
-            />
-          </label>
-
-          <div className="status-row">
-            <button className="generate-button" onClick={handleGenerate} type="button">
-              {isLoading ? "Generating..." : "Generate form"}
-            </button>
-            <span
-              className={`status-chip ${
-                apiConfigured ? "status-chip--success" : "status-chip--warning"
-              }`}
-            >
-              {apiConfigured ? "API connected" : "API key missing"}
-            </span>
-            <span className="status-chip">Server route: /api/generate-form</span>
-            <span className="status-chip">Model output is schema-validated</span>
-          </div>
-
-          <p className="subtle-copy">
-            Set <code>OPENAI_API_KEY</code> and <code>OPENAI_MODEL</code> in{" "}
-            <code>.env.local</code> before running the app.
+      <main className="page-shell">
+        <section className="intro-block">
+          <p className="section-kicker">LLM-backed generative UI</p>
+          <h1 className="intro-block__headline">Describe the form. Generate the UI.</h1>
+          <p className="intro-copy">
+            Type the fields you want, generate once, then inspect the live form
+            and its validated schema side by side.
           </p>
+        </section>
 
-          {errorMessage ? (
-            <div aria-live="assertive" className="error-banner" role="alert">
-              {errorMessage}
-            </div>
-          ) : null}
-        </div>
-
-        <div className="panel-grid">
-          {schema ? (
-            <DynamicForm schema={schema} />
-          ) : (
-            <section className="empty-state">
+        <section className="workspace">
+          <div className="composer-card composer-card--primary">
+            <div className="composer-card__header">
               <div>
-                <h2>No generated form yet</h2>
-                <p>Generate a prompt above to render a runtime-built UI.</p>
+                <p className="section-kicker">Prompt</p>
+                <h2>What form should the app create?</h2>
               </div>
-            </section>
-          )}
+              <p>
+                Be explicit about fields, labels, or options. Example: “Create a
+                form with only name, email, and a country select for Southeast Asia.”
+              </p>
+            </div>
 
-          <SchemaPanel schema={schema} />
-        </div>
-      </section>
-    </main>
+            <label className="prompt-field prompt-field--featured" htmlFor="prompt">
+              <span className="field__label">Type your request</span>
+              <textarea
+                id="prompt"
+                name="prompt"
+                rows={5}
+                value={prompt}
+                onChange={(event) => setPrompt(event.target.value)}
+                placeholder="Create a form with only name and email."
+              />
+            </label>
+
+            <div className="quick-prompts" aria-label="Suggested prompts">
+              {QUICK_PROMPTS.map((currentPrompt) => (
+                <button
+                  key={currentPrompt}
+                  className="quick-prompt"
+                  type="button"
+                  onClick={() => setPrompt(currentPrompt)}
+                >
+                  {currentPrompt}
+                </button>
+              ))}
+            </div>
+
+            <div className="composer-actions">
+              <button className="generate-button" onClick={handleGenerate} type="button">
+                {isLoading ? "Generating..." : "Generate form"}
+              </button>
+              <p className="subtle-copy subtle-copy--inline">
+                API calls happen only when you click Generate.
+              </p>
+            </div>
+
+            <p className="subtle-copy">
+              Set <code>OPENAI_API_KEY</code> and <code>OPENAI_MODEL</code> in{" "}
+              <code>.env.local</code> before running the app.
+            </p>
+
+            {errorMessage ? (
+              <div aria-live="assertive" className="error-banner" role="alert">
+                {errorMessage}
+              </div>
+            ) : null}
+          </div>
+
+          <div className="panel-grid">
+            {schema ? (
+              <DynamicForm schema={schema} />
+            ) : (
+              <section className="empty-state">
+                <div>
+                  <p className="section-kicker">Live preview</p>
+                  <h2>No generated form yet</h2>
+                  <p>
+                    Start with a prompt above. The preview will appear here after
+                    generation.
+                  </p>
+                </div>
+              </section>
+            )}
+
+            <SchemaPanel schema={schema} />
+          </div>
+        </section>
+      </main>
+    </>
   );
 }

@@ -1,4 +1,4 @@
-# Generative UI Form Builder
+# gen-ui-nextjs
 
 This is a Next.js App Router demo that turns a prompt into a validated form schema on the server and renders the result with React on the client.
 
