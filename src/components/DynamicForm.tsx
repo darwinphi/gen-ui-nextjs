@@ -152,6 +152,7 @@ export function DynamicForm({ schema }: DynamicFormProps) {
 
   return (
     <div className="preview-card">
+      <div className="section-ribbon">Live Preview</div>
       <div className="preview-card__header">
         <h2>{schema.title}</h2>
         {schema.description ? <p>{schema.description}</p> : null}

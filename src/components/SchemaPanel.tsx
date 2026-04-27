@@ -7,6 +7,7 @@ type SchemaPanelProps = {
 export function SchemaPanel({ schema }: SchemaPanelProps) {
   return (
     <aside className="schema-card">
+      <div className="section-ribbon">Schema</div>
       <div className="schema-card__header">
         <h2>Schema Viewer</h2>
         <p>See the generated JSON that React is rendering.</p>

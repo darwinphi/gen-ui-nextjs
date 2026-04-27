@@ -1,17 +1,34 @@
 import type { Metadata } from "next";
-import { IBM_Plex_Mono, IBM_Plex_Sans } from "next/font/google";
+import {
+  Playfair_Display,
+  Source_Serif_4,
+  Space_Mono,
+  Work_Sans,
+} from "next/font/google";
 import "./globals.css";
 
-const plexSans = IBM_Plex_Sans({
+const displaySerif = Playfair_Display({
   subsets: ["latin"],
-  weight: ["300", "400", "600"],
-  variable: "--font-plex-sans",
+  weight: ["400", "700"],
+  variable: "--font-display-serif",
 });
 
-const plexMono = IBM_Plex_Mono({
+const bodySerif = Source_Serif_4({
+  subsets: ["latin"],
+  weight: ["400", "700"],
+  variable: "--font-body-serif",
+});
+
+const uiSans = Work_Sans({
+  subsets: ["latin"],
+  weight: ["400", "600", "700"],
+  variable: "--font-ui-sans",
+});
+
+const mono = Space_Mono({
   subsets: ["latin"],
   weight: ["400"],
-  variable: "--font-plex-mono",
+  variable: "--font-mono",
 });
 
 export const metadata: Metadata = {
@@ -26,7 +43,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${plexSans.variable} ${plexMono.variable}`}>{children}</body>
+      <body
+        className={`${displaySerif.variable} ${bodySerif.variable} ${uiSans.variable} ${mono.variable}`}
+      >
+        {children}
+      </body>
     </html>
   );
 }

@@ -67,7 +67,8 @@ export function FormBuilderWorkbench({
     <>
       <header className="masthead">
         <div className="masthead__brand">
-          <span className="masthead__title">gen-ui-nextjs</span>
+          <span className="masthead__utility-link">Generative UI</span>
+          <span className="masthead__utility-link">Prompt to schema</span>
         </div>
         <div className="masthead__utility">
           <span
@@ -91,10 +92,10 @@ export function FormBuilderWorkbench({
         </section>
 
         <section className="workspace">
-          <div className="composer-card composer-card--primary">
+          <section className="composer-card composer-card--primary">
+            <div className="section-ribbon">Prompt</div>
             <div className="composer-card__header">
               <div>
-                <p className="section-kicker">Prompt</p>
                 <h2>What form should the app create?</h2>
               </div>
               <p>
@@ -103,17 +104,43 @@ export function FormBuilderWorkbench({
               </p>
             </div>
 
-            <label className="prompt-field prompt-field--featured" htmlFor="prompt">
-              <span className="field__label">Type your request</span>
-              <textarea
-                id="prompt"
-                name="prompt"
-                rows={5}
-                value={prompt}
-                onChange={(event) => setPrompt(event.target.value)}
-                placeholder="Create a form with only name and email."
-              />
-            </label>
+            <div className="composer-grid">
+              <label className="prompt-field prompt-field--featured" htmlFor="prompt">
+                <span className="field__label">Type your request</span>
+                <textarea
+                  id="prompt"
+                  name="prompt"
+                  rows={5}
+                  value={prompt}
+                  onChange={(event) => setPrompt(event.target.value)}
+                  placeholder="Create a form with only name and email."
+                />
+              </label>
+
+              <aside className="composer-sidebar">
+                <div className="composer-meta">
+                  <p className="section-kicker">Notes</p>
+                  <p>
+                    The model only runs when you click Generate. Returned JSON is
+                    validated before the UI renders.
+                  </p>
+                </div>
+
+                <div className="composer-meta">
+                  <p className="section-kicker">Environment</p>
+                  <p>
+                    Set <code>OPENAI_API_KEY</code> and <code>OPENAI_MODEL</code> in{" "}
+                    <code>.env.local</code>.
+                  </p>
+                </div>
+              </aside>
+            </div>
+
+            <div className="composer-actions">
+              <button className="generate-button" onClick={handleGenerate} type="button">
+                {isLoading ? "Generating..." : "Generate form"}
+              </button>
+            </div>
 
             <div className="quick-prompts" aria-label="Suggested prompts">
               {QUICK_PROMPTS.map((currentPrompt) => (
@@ -128,34 +155,20 @@ export function FormBuilderWorkbench({
               ))}
             </div>
 
-            <div className="composer-actions">
-              <button className="generate-button" onClick={handleGenerate} type="button">
-                {isLoading ? "Generating..." : "Generate form"}
-              </button>
-              <p className="subtle-copy subtle-copy--inline">
-                API calls happen only when you click Generate.
-              </p>
-            </div>
-
-            <p className="subtle-copy">
-              Set <code>OPENAI_API_KEY</code> and <code>OPENAI_MODEL</code> in{" "}
-              <code>.env.local</code> before running the app.
-            </p>
-
             {errorMessage ? (
               <div aria-live="assertive" className="error-banner" role="alert">
                 {errorMessage}
               </div>
             ) : null}
-          </div>
+          </section>
 
           <div className="panel-grid">
             {schema ? (
               <DynamicForm schema={schema} />
             ) : (
               <section className="empty-state">
+                <div className="section-ribbon">Live Preview</div>
                 <div>
-                  <p className="section-kicker">Live preview</p>
                   <h2>No generated form yet</h2>
                   <p>
                     Start with a prompt above. The preview will appear here after
